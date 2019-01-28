@@ -1,5 +1,6 @@
 # coding: utf-8
 
+from keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCheckpoint, TensorBoard
 from keras.models import Model
 from keras.layers import Input, concatenate, Conv2D, MaxPooling2D, Activation, UpSampling2D, BatchNormalization
 from keras.optimizers import RMSprop
@@ -30,6 +31,8 @@ class UNet(object):
         self.num_filters = num_filters
 
         self._validate_params()
+
+        self.callbacks = []
 
     def _validate_params(self):
         # TODO
@@ -82,3 +85,13 @@ class UNet(object):
         self.model = Model(inputs=inputs, outputs=classify)
         self.model.compile(optimizer=RMSprop(lr=0.0001), loss=bce_dice_loss, metrics=[dice_coeff])
 
+    def fit(self, train_generator, steps_per_epoch, epochs, verbose, callbacks, validation_data, validation_steps):
+        self.model.fit_generator(
+            generator=train_generator,
+            steps_per_epoch=steps_per_epoch,
+            epochs=epochs,
+            verbose=verbose,
+            callbacks=callbacks,
+            validation_data=valid_generator,
+            validation_steps=validation_steps
+        )
