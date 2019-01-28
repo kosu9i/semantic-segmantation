@@ -3,10 +3,10 @@
 
 import os
 import sys
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../models/')
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
 
-from unet.model import UNet
-
+from models.unet.model import UNet
+from flow.generator import train_generator, valid_generator
 
 def main():
     model = UNet(
