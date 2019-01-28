@@ -39,6 +39,7 @@ class UNet(object):
         inputs = Input(shape=self.input_shape)
         prev_output = inputs
 
+        # add down layer
         down_list = []
         for num_filter in self.num_filters['down']:
             down = Conv2D(num_filter, self.kernel_size, padding=self.padding)(prev_output)
@@ -51,15 +52,16 @@ class UNet(object):
             down_list.append(down)
             prev_output = down_pool 
 
+        # add center layer
         center = Conv2D(self.num_filters['center'], self.kernel_size, padding=self.padding)(prev_output)
         center = BatchNormalization()(center)
         center = Activation('relu')(center)
         center = Conv2D(self.num_filters['center'], self.kernel_size, padding=self.padding)(center)
         center = BatchNormalization()(center)
         center = Activation('relu')(center)
-
         prev_output = center
 
+        # add up layer
         for i, num_filter in enumerate(self.num_filters['up'], start=1):
             up = UpSampling2D((2, 2))(prev_output)
             up = concatenate([down_list[-i], up], axis=3)
@@ -74,9 +76,9 @@ class UNet(object):
             up = Activation('relu')(up)
             prev_output = up
              
+        # add output layer
         classify = Conv2D(self.num_classes, (1, 1), activation='sigmoid')(prev_output)
 
         self.model = Model(inputs=inputs, outputs=classify)
-
         self.model.compile(optimizer=RMSprop(lr=0.0001), loss=bce_dice_loss, metrics=[dice_coeff])
 
