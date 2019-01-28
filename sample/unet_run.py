@@ -3,9 +3,9 @@
 
 import os
 import sys
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../model/')
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../models/')
 
-from unet import UNet
+from unet.model import UNet
 
 
 def main():
