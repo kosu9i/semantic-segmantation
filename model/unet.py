@@ -16,13 +16,18 @@ class UNet(object):
                  kernel=(3, 3),
                  strides=(2, 2),
                  padding='same',
+                 num_filters={
+                    'down': [64, 128, 256, 512],
+                    'center': 1024,
+                    'up': [512, 256, 128, 64]
+                    }
                  ):
         self.input_shape = input_shape
         self.num_classes = num_classes
         self.kernel = kernel
         self.strides = strides
         self.padding = padding
-
+        self.num_filters = num_filters
 
     def _create_filter_list(self):
         num_filter = self.input_shape[0]
