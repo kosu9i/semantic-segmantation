@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from preprocess.transform import randomHueSaturationValue, randomShiftScaleRotate, randomHorizontalFlip
 
-def train_generator(ids_train_split, train_dir, train_masks_dir, batch_size, input_size):
+def train_generator(ids_train_split, train_dir, train_masks_dir, batch_size, input_shape):
     while True:
         for start in range(0, len(ids_train_split), batch_size):
             x_batch = []
@@ -11,9 +11,9 @@ def train_generator(ids_train_split, train_dir, train_masks_dir, batch_size, inp
             ids_train_batch = ids_train_split[start:end]
             for id in ids_train_batch.values:
                 img = cv2.imread('{}/{}.jpg'.format(train_dir, id))
-                img = cv2.resize(img, (input_size, input_size))
+                img = cv2.resize(img, input_shape)
                 mask = cv2.imread('{}/{}_mask.png'.format(train_masks_dir, id), cv2.IMREAD_GRAYSCALE)
-                mask = cv2.resize(mask, (input_size, input_size))
+                mask = cv2.resize(mask, input_shape)
                 img = randomHueSaturationValue(img,
                                                hue_shift_limit=(-50, 50),
                                                sat_shift_limit=(-5, 5),
@@ -31,7 +31,7 @@ def train_generator(ids_train_split, train_dir, train_masks_dir, batch_size, inp
             yield x_batch, y_batch
 
 
-def valid_generator(ids_valid_split, valid_dir, valid_masks_dir, batch_size, input_size):
+def valid_generator(ids_valid_split, valid_dir, valid_masks_dir, batch_size, input_shape):
     while True:
         for start in range(0, len(ids_valid_split), batch_size):
             x_batch = []
@@ -40,9 +40,9 @@ def valid_generator(ids_valid_split, valid_dir, valid_masks_dir, batch_size, inp
             ids_valid_batch = ids_valid_split[start:end]
             for id in ids_valid_batch.values:
                 img = cv2.imread('{}/{}.jpg'.format(valid_dir, id))
-                img = cv2.resize(img, (input_size, input_size))
+                img = cv2.resize(img, input_shape)
                 mask = cv2.imread('{}/{}_mask.png'.format(valid_masks_dir, id), cv2.IMREAD_GRAYSCALE)
-                mask = cv2.resize(mask, (input_size, input_size))
+                mask = cv2.resize(mask, input_shape)
                 mask = np.expand_dims(mask, axis=2)
                 x_batch.append(img)
                 y_batch.append(mask)

@@ -92,6 +92,6 @@ class UNet(object):
             epochs=epochs,
             verbose=verbose,
             callbacks=callbacks,
-            validation_data=valid_generator,
+            validation_data=validation_data,
             validation_steps=validation_steps
         )
