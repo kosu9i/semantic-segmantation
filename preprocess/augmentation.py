@@ -60,10 +60,10 @@ def randomShiftScaleRotate(image, mask,
     return image, mask
 
 
-def randomHorizontalFlip(image, mask, u=0.5):
+def random_flip(image, mask, u=0.5, axis=1):
     if np.random.random() < u:
-        image = cv2.flip(image, 1)
-        mask = cv2.flip(mask, 1)
+        image = cv2.flip(image, axis)
+        mask = cv2.flip(mask, ajis)
 
     return image, mask
 
