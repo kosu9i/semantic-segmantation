@@ -9,8 +9,6 @@ from .losses import bce_dice_loss, dice_loss, weighted_bce_dice_loss, weighted_d
 
 class UNet(object):
 
-    MAX_FILTER_NUM = 1024
-
     def __init__(self,
                  input_shape=(128, 128, 3),
                  num_classes=1,

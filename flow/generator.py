@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from preprocess.transform import randomHueSaturationValue, randomShiftScaleRotate, randomHorizontalFlip
+from preprocess.augmentation import random_hue_saturation_value, random_shift_scale_rotate, random_flip
 
 def train_generator(ids_train_split, train_dir, train_masks_dir, batch_size, input_shape):
     while True:
@@ -14,15 +14,15 @@ def train_generator(ids_train_split, train_dir, train_masks_dir, batch_size, inp
                 img = cv2.resize(img, input_shape)
                 mask = cv2.imread('{}/{}_mask.png'.format(train_masks_dir, id), cv2.IMREAD_GRAYSCALE)
                 mask = cv2.resize(mask, input_shape)
-                img = randomHueSaturationValue(img,
-                                               hue_shift_limit=(-50, 50),
-                                               sat_shift_limit=(-5, 5),
-                                               val_shift_limit=(-15, 15))
-                img, mask = randomShiftScaleRotate(img, mask,
-                                                   shift_limit=(-0.0625, 0.0625),
-                                                   scale_limit=(-0.1, 0.1),
-                                                   rotate_limit=(-0, 0))
-                img, mask = randomHorizontalFlip(img, mask)
+                img = random_hue_saturation_value(img,
+                                                  hue_shift_limit=(-50, 50),
+                                                  sat_shift_limit=(-5, 5),
+                                                  val_shift_limit=(-15, 15))
+                img, mask = random_shift_scale_rotate(img, mask,
+                                                      shift_limit=(-0.0625, 0.0625),
+                                                      scale_limit=(-0.1, 0.1),
+                                                      rotate_limit=(-0, 0))
+                img, mask = random_flip(img, mask)
                 mask = np.expand_dims(mask, axis=2)
                 x_batch.append(img)
                 y_batch.append(mask)

@@ -3,9 +3,9 @@ import numpy as np
 import pandas as pd
 
 
-def randomHueSaturationValue(image, hue_shift_limit=(-180, 180),
-                             sat_shift_limit=(-255, 255),
-                             val_shift_limit=(-255, 255), u=0.5):
+def random_hue_saturation_value(image, hue_shift_limit=(-180, 180),
+                                sat_shift_limit=(-255, 255),
+                                val_shift_limit=(-255, 255), u=0.5):
     if np.random.random() < u:
         image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
         h, s, v = cv2.split(image)
@@ -21,11 +21,11 @@ def randomHueSaturationValue(image, hue_shift_limit=(-180, 180),
     return image
 
 
-def randomShiftScaleRotate(image, mask,
-                           shift_limit=(-0.0625, 0.0625),
-                           scale_limit=(-0.1, 0.1),
-                           rotate_limit=(-45, 45), aspect_limit=(0, 0),
-                           borderMode=cv2.BORDER_CONSTANT, u=0.5):
+def random_shift_scale_rotate(image, mask,
+                              shift_limit=(-0.0625, 0.0625),
+                              scale_limit=(-0.1, 0.1),
+                              rotate_limit=(-45, 45), aspect_limit=(0, 0),
+                              borderMode=cv2.BORDER_CONSTANT, u=0.5):
     if np.random.random() < u:
         height, width, channel = image.shape
 
@@ -63,7 +63,7 @@ def randomShiftScaleRotate(image, mask,
 def random_flip(image, mask, u=0.5, axis=1):
     if np.random.random() < u:
         image = cv2.flip(image, axis)
-        mask = cv2.flip(mask, ajis)
+        mask = cv2.flip(mask, axis)
 
     return image, mask
 

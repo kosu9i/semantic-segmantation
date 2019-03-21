@@ -15,16 +15,6 @@ from flow.generator import train_generator, valid_generator
 HERE = os.path.dirname(os.path.abspath(__file__)) + '/' 
 
 def main():
-    #model = UNet(
-    #    input_shape=(1024, 1024, 3),
-    #    num_filters={
-    #        'down': [8, 16, 32, 64, 128, 256, 512],
-    #        'center': 1024,
-    #        'up': [512, 256, 128, 64, 32, 16, 8]
-    #    } 
-    #)
-    #model.build()
-    #print(model.model.summary())
 
     df_train = pd.read_csv(HERE + '../../../data/train_masks.csv')
     ids_train = df_train['img'].map(lambda s: s.split('.')[0])
