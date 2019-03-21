@@ -1,0 +1,224 @@
+---
+swagger: "2.0"
+info:
+  description: "Semantic Segmantation Sample"
+  version: "0.1"
+  title: "Semantic Segmantation Sample"
+  contact:
+    email: "tomoki.kosugi@brainpad.co.jp"
+host: "localhost:8080"
+basePath: "/v0.1"
+tags:
+- name: "demand estimate"
+  description: "Demand estimation"
+schemes:
+- "http"
+paths:
+  /train:
+    get:
+      tags:
+      - "demand estimate"
+      summary: "trainのステータスを取得する。"
+      description: ""
+      operationId: "get_train_status"
+      parameters:
+      - name: "trainId"
+        in: "query"
+        description: "特定のTrain IDを指定。省略した場合は全Train IDのステータスを返却する。"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "ステータス取得成功"
+          schema:
+            $ref: "#/definitions/TrainStatus"
+        400:
+          description: "Train ID該当なし"
+        405:
+          description: "Invalid input"
+      x-swagger-router-controller: "swagger_server.controllers.demand_estimate_controller"
+    post:
+      tags:
+      - "demand estimate"
+      summary: "Train by a new data"
+      operationId: "add_train"
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "trainData"
+        in: "formData"
+        description: "Train data."
+        required: true
+        type: "file"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/AddTrainResponse"
+        405:
+          description: "Invalid input"
+      x-swagger-router-controller: "swagger_server.controllers.demand_estimate_controller"
+  /predict:
+    get:
+      tags:
+      - "demand estimate"
+      summary: "predictのステータスを取得する。"
+      description: ""
+      operationId: "get_predict_status"
+      parameters:
+      - name: "predictId"
+        in: "query"
+        description: "特定のPredict IDを指定。省略した場合は全Predict IDのステータスを返却する。"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "ステータス取得成功"
+          schema:
+            $ref: "#/definitions/PredictStatus"
+        400:
+          description: "Predict ID該当なし"
+        405:
+          description: "Invalid input"
+      x-swagger-router-controller: "swagger_server.controllers.demand_estimate_controller"
+    post:
+      tags:
+      - "demand estimate"
+      summary: "Predict by a new data"
+      operationId: "add_predict"
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "predictData"
+        in: "formData"
+        description: "Predict data."
+        required: true
+        type: "file"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/AddPredictResponse"
+        405:
+          description: "Invalid input"
+      x-swagger-router-controller: "swagger_server.controllers.demand_estimate_controller"
+  /predict/result:
+    get:
+      tags:
+      - "demand estimate"
+      summary: "predictの結果ファイルを取得する。"
+      description: ""
+      operationId: "get_predict_result"
+      parameters:
+      - name: "predictId"
+        in: "query"
+        description: "特定のPredict IDを指定。"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "結果取得成功"
+          schema:
+            type: "file"
+        400:
+          description: "Predict ID該当なし"
+        405:
+          description: "Invalid input"
+      x-swagger-router-controller: "swagger_server.controllers.demand_estimate_controller"
+definitions:
+  AddTrainResponse:
+    type: "object"
+    required:
+    - "code"
+    - "message"
+    properties:
+      code:
+        type: "integer"
+      message:
+        type: "string"
+      trainId:
+        type: "string"
+    example:
+      trainId: "trainId"
+      code: 0
+      message: "message"
+  AddPredictResponse:
+    type: "object"
+    required:
+    - "code"
+    - "message"
+    properties:
+      code:
+        type: "integer"
+      message:
+        type: "string"
+      predictId:
+        type: "string"
+    example:
+      predictId: "predictId"
+      code: 0
+      message: "message"
+  TrainStatus:
+    type: "object"
+    properties:
+      status_list:
+        type: "array"
+        items:
+          $ref: "#/definitions/TrainStatus_status_list"
+    example:
+      status_list:
+      - trainId: "trainId"
+        message: "message"
+        status: "status"
+      - trainId: "trainId"
+        message: "message"
+        status: "status"
+  PredictStatus:
+    type: "object"
+    properties:
+      status_list:
+        type: "array"
+        items:
+          $ref: "#/definitions/PredictStatus_status_list"
+    example:
+      status_list:
+      - predictId: "predictId"
+        message: "message"
+        status: "status"
+      - predictId: "predictId"
+        message: "message"
+        status: "status"
+  TrainStatus_status_list:
+    required:
+    - "status"
+    - "trainId"
+    properties:
+      trainId:
+        type: "string"
+      status:
+        type: "string"
+      message:
+        type: "string"
+    example:
+      trainId: "trainId"
+      message: "message"
+      status: "status"
+  PredictStatus_status_list:
+    required:
+    - "predictId"
+    - "status"
+    properties:
+      predictId:
+        type: "string"
+      status:
+        type: "string"
+      message:
+        type: "string"
+    example:
+      predictId: "predictId"
+      message: "message"
+      status: "status"
