@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import argparse
 import os
 import sys
+
 import numpy as np
 import pandas as pd
 from keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCheckpoint, TensorBoard
@@ -10,11 +12,14 @@ from sklearn.model_selection import train_test_split
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
 from models.unet.model import UNet
+from models.linknet.model import LinkNet
 from flow.generator import train_generator, valid_generator
 
 HERE = os.path.dirname(os.path.abspath(__file__)) + '/' 
 
-def main():
+def train(model_type):
+
+    print('Model "{}" is selected.'.format(model_type))
 
     df_train = pd.read_csv(HERE + '../../../data/train_masks.csv')
     ids_train = df_train['img'].map(lambda s: s.split('.')[0])
@@ -27,7 +32,13 @@ def main():
     input_shape = (128, 128)
     batch_size = 32
 
-    model = UNet(input_shape=(input_shape[0], input_shape[1], 3))
+    if model_type == 'unet':
+        model = UNet(input_shape=(input_shape[0], input_shape[1], 3))
+    elif model_type == 'linknet':
+        model = LinkNet(input_shape=(input_shape[0], input_shape[1], 3))
+    else:
+        raise RuntimeError('Model "{}" is not found.'.format(model_type))
+
     model.build()
     print(model.model.summary())
 
@@ -72,5 +83,18 @@ def main():
         validation_steps=np.ceil(float(len(ids_valid_split)) / float(batch_size))
     )
 
+
+def arg_parse():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-m', '--model', dest='model_type',
+                        choices=['unet', 'linknet'],
+                        default='unet')
+    return parser.parse_args()
+
+def main():
+    args = arg_parse()
+    train(model_type=args.model_type)
+
 if __name__ == '__main__':
     main()
+
