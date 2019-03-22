@@ -10,8 +10,7 @@ from models.unet.losses import bce_dice_loss, dice_loss, weighted_bce_dice_loss,
  
 class LinkNet(object):
  
-    MAX_FILTER_NUM = 1024
- 
+    # TODO: 検証時に変更したいパラメータを引数にとるようにしたい
     def __init__(self,
                  input_shape=(128, 128, 3),
                  num_classes=1,
